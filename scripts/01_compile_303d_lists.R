@@ -54,12 +54,13 @@ list2002e <- list2002 %>%
                 subpollutant = NA) %>%
   dplyr::select(wbid, report_year, regional_board_no, water_body_type, pollutant_stressor, subpollutant, water_body_name) %>%
   setNames(.,newnames) %>%
-  convert(.,newcats)
+  distinct() ## removes duplicated rows due to separate, suspected source data 
 
 list2006e <- list2006 %>%
   dplyr::mutate(report_year = 2006) %>%
   dplyr::select(wbid, report_year, region_number, water_body_type, pollutant_category, pollutant, water_body_name) %>%
-  setNames(.,newnames)
+  setNames(.,newnames) %>%
+  distinct() ## removes duplicated rows due to separate, suspected source data
   
 list2010e <- list2010 %>%
   dplyr::mutate(report_year = 2010) %>%
