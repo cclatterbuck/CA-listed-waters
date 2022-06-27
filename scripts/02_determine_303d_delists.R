@@ -6,8 +6,12 @@
 
 library(here)
 library(tidyverse)
+library(janitor)
 
-listed <- read_csv(here("transformeddata", "CWA_303d_waters_2002_2022.csv"))
+# listed <- read_csv(here("transformeddata", "CWA_303d_waters_2002_2022.csv")) %>%
+#   remove_empty(c("rows", "cols"))
+listed <- read_csv(here("transformeddata", "CWA_303d_waters_2006_2022.csv")) %>%
+  remove_empty(c("rows", "cols"))
 
 ## make water_body_id a factor & separate data by year
 listed$report_year_char <- paste0("df",as.character(listed$report_year))
@@ -17,7 +21,7 @@ list2env(list_year,envir=.GlobalEnv)
 
 ## create dfs of delistings by year
 ## assumes all rows use the same terminology for pollutants & subpollutants...
-delist1 <- anti_join(df2002, df2006, by = c('water_body_id', 'pollutant')) ## no subpollutants in 2002 dataset
+# delist1 <- anti_join(df2002, df2006, by = c('water_body_id', 'pollutant')) ## no subpollutants in 2002 dataset
 delist2 <- anti_join(df2006, df2010, by = c('water_body_id', 'subpollutant'))
 delist3 <- anti_join(df2010, df2012, by = c('water_body_id', 'subpollutant'))
 delist4 <- anti_join(df2012, df2016, by = c('water_body_id', 'subpollutant'))
@@ -25,9 +29,12 @@ delist5 <- anti_join(df2016, df2018, by = c('water_body_id', 'subpollutant'))
 delist6 <- anti_join(df2018, df2022, by = c('water_body_id', 'subpollutant'))
 
 ## combine & save
-delisted <- bind_rows(delist1, delist2, delist3, delist4, delist5, delist6) %>%
+# delisted <- bind_rows(delist1, delist2, delist3, delist4, delist5, delist6) %>%
+#   dplyr::select(-report_year_char)
+delisted <- bind_rows(delist2, delist3, delist4, delist5, delist6) %>%
   dplyr::select(-report_year_char)
 str(delisted)
 # write_csv(delisted, here("transformeddata", "CWA_303d_delistedwaters_2002_2022.csv"))
+write_csv(delisted, here("transformeddata", "CWA_303d_delistedwaters_2006_2022.csv"))
 
 

@@ -12,7 +12,8 @@ Please submit your own code visualizing this data! I'd be happy to add it to the
 Forewarning: I'm still figuring out how contributions work, so I doubt I can be especially helpful here. If you use R, these [instructions](https://happygitwithr.com/fork-and-clone.html) from Jenny Bryan might be helpful. Also check out Marc Diethelm's contributing [repo](https://github.com/MarcDiethelm/contributing/blob/master/README.md) for practice. Otherwise, Google is your friend. 
 
 ## Data source
-All data are from the State Water Resources Control Board's [Integrated Report](https://www.waterboards.ca.gov/water_issues/programs/water_quality_assessment/integrated_report_cycles.html) published regularly from 2022-2022. While the 303(d) lists are available as .xls or .xlsx, delisting data are not available as a flat file download for all years.  
+All data are from the State Water Resources Control Board's [Integrated Report](https://www.waterboards.ca.gov/water_issues/programs/water_quality_assessment/integrated_report_cycles.html) published regularly from 2006-2022. While the 303(d) lists are available as .xls or .xlsx, delisting data are not available as a flat file download for all years.  
 
 ## Scripts
-01. Cleans & compiles the raw 303d lists into a single file, CWA_303d_waters_2002_2022.csv. Many columns are removed for the purposes of this exercise.
+01. Cleans & compiles the raw 303d lists into a single file, CWA_303d_waters_2006_2022.csv. Many columns are removed for the purposes of this exercise.
+02. Attempts to get delisted water body ids (wbids) & pollutant combinations, but is hampered by changing vocabulary in the pollutant & subpollutant categories across time. The resulting file CWA_303d_delistedwaters_2006_2022.csv may not be accurate.
