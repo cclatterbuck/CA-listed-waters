@@ -28,13 +28,30 @@ delist4 <- anti_join(df2012, df2016, by = c('water_body_id', 'subpollutant'))
 delist5 <- anti_join(df2016, df2018, by = c('water_body_id', 'subpollutant'))
 delist6 <- anti_join(df2018, df2022, by = c('water_body_id', 'subpollutant'))
 
-## combine & save
+
+
+## combine 
 # delisted <- bind_rows(delist1, delist2, delist3, delist4, delist5, delist6) %>%
 #   dplyr::select(-report_year_char)
 delisted <- bind_rows(delist2, delist3, delist4, delist5, delist6) %>%
   dplyr::select(-report_year_char)
+
+
+
+## make create year de-listed column
+delisted <- delisted %>%
+  dplyr::mutate(delist_year = case_when(
+    report_year == 2006 ~ 2010,
+    report_year == 2010 ~ 2012,
+    report_year == 2012 ~ 2016,
+    report_year == 2016 ~ 2018,
+    report_year == 2018 ~ 2022,
+    TRUE ~ 0
+    
+  ))
+
 str(delisted)
 # write_csv(delisted, here("transformeddata", "CWA_303d_delistedwaters_2002_2022.csv"))
-write_csv(delisted, here("transformeddata", "CWA_303d_delistedwaters_2006_2022.csv"))
+# write_csv(delisted, here("transformeddata", "CWA_303d_delistedwaters_2006_2022.csv"))
 
 
