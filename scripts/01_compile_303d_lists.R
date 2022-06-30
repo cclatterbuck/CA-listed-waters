@@ -113,7 +113,7 @@ colnames(impaired_list)
 levels(as.factor(impaired_list$regional_board_no)) ## ok
 levels(as.factor(impaired_list$water_body_type)) ## cleanup
 levels(as.factor(impaired_list$pollutant)) ## no obvious typos
-levels(as.factor(impaired_list$subpollutant)) ## no obvious typos
+levels(as.factor(impaired_list$subpollutant)) ## cleanup
 
 #### clean up water_body_type
 table(as.factor(impaired_list$water_body_type))
@@ -129,6 +129,14 @@ impaired_list <- impaired_list %>%
          "Wetlands, Tidal" = "Wetland, Tidal"))
 levels(as.factor(impaired_list$water_body_type))
 
+#### clean up subpollutant
+pollutants <- as.data.frame(table(impairedlist$subpollutant))
+impaired_list <- impaired_list %>%
+  dplyr::mutate(subpollutant = recode(subpollutant,
+                                      "Benzo(a)pyrene  (3,4-Benzopyrene -7-d)" = "Benzo(a)pyrene (3,4-Benzopyrene -7-d",
+                                      "Bis(2ethylhexyl)phthalate/DEHP" = "Bis(2ethylhexyl)phthalate (DEHP)",
+                                      "Dioxin Compounds (including 2,3,7,8-TCDD)" = "Dioxin compounds (including 2,3,7,8-TCDD)",
+                                      "Indicator bacteria" = "Indicator Bacteria"))
 
 
 ### 5. save cleaned df
