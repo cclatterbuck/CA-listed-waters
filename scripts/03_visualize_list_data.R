@@ -34,11 +34,12 @@ ggplot(data=table1) +
   theme(legend.position = "none")
 
 
+## use geom_ribbon to fill in listed & delisted areas
 table2 <- table1 |>
   dplyr::select(-n) |>
   pivot_wider(names_from = listing_status, values_from = cs) |>
   clean_names()
-  
+
 ggplot(data=table2, aes(x = report_year)) +
   geom_ribbon(aes(ymin = delisted, ymax = new_listing), fill = "#435501") +
   geom_ribbon(aes(ymin = 0, ymax = delisted), fill = "#550143") +
@@ -67,6 +68,78 @@ ggplot(data=table2, aes(x = report_year)) +
         axis.ticks.y = element_blank(),
         plot.margin = unit(c(1,1,1,1), "cm"),
         panel.background = element_rect(fill = "#FFFEF2"),
+        panel.grid = element_blank(),
+        legend.position = "none")
+
+## use geom_ribbon to highlight gap only; must run table1 and table2 above for correct data
+ggplot(data=table1) +
+  geom_ribbon(data = table2, aes(x = report_year, ymin = delisted, ymax = new_listing), fill  = "#97a084") +
+  geom_line(aes(x = report_year, y = cs, group = listing_status), size = 1.5, color = "#080907") +
+  scale_x_continuous(breaks = seq(2010,2022,2)) +
+  scale_y_continuous(breaks = seq(0,4000,1000)) +
+  annotate("label", x = 2021, y = 4200, label = "Listed", fill = "#080907", color = "#e5e7e1") +
+  annotate("label", x = 2021, y = 300, label = "Delisted", fill = "#080907", color = "#e5e7e1") +
+  labs(title = "California waters are becoming impaired faster than we can delist them", 
+       subtitle = "Cumulative sums of California's 303(d) newly listed and delisted waters, 2010-current",
+       x = "Year",
+       y = "Waterbody/pollutant combinations") +
+  # theme_classic() +
+  theme(plot.background = element_rect(fill = "#e5e7e1"), # background colour
+        plot.title = element_text(colour = "#080907", # text colour
+                                  size = 16, # font size
+                                  face = "bold"), # bold text
+        plot.subtitle = element_text(colour = "#080907",
+                                     size = 13,
+                                     face = "italic"),
+        plot.caption = element_text(colour = "#080907"),
+        axis.text = element_text(colour = "#080907"),
+        axis.title.x = element_text(colour = "#080907", size = 10, face = "bold"),
+        axis.title.y = element_text(colour = "#080907", size = 10, face = "bold"),
+        axis.text.x = element_text(colour = "#080907", size = 10),
+        axis.text.y = element_text(colour = "#080907", size = 10),
+        axis.ticks.x = element_blank(),
+        axis.ticks.y = element_blank(),
+        plot.margin = unit(c(1,1,1,1), "cm"),
+        panel.background = element_rect(fill = "#e5e7e1"),
+        panel.grid = element_blank(),
+        legend.position = "none")
+
+## with different colors and curved arrows
+ggplot(data=table1) +
+  geom_ribbon(data = table2, aes(x = report_year, ymin = delisted, ymax = new_listing), fill  = "#3f7c93") +
+  geom_line(aes(x = report_year, y = cs, group = listing_status), size = 1.5, color = "#0c2a3f") +
+  scale_x_continuous(breaks = seq(2010,2022,2)) +
+  scale_y_continuous(breaks = seq(0,4000,1000)) +
+  annotate("label", x = 2021, y = 4200, label = "Listed", fill = "#0c2a3f", color = "#dae4eb") +
+  geom_curve(aes(x = 2020.5, y = 4200, xend = 2020, yend = 3500),
+             arrow = arrow(length = unit(0.03, "npc"), type="closed"), 
+             colour = "#0c2a3f", size = 0.5, curvature = 0.3, angle = 90) +
+  annotate("label", x = 2021, y = 300, label = "Delisted", fill = "#0c2a3f", color = "#dae4eb") +
+  geom_curve(aes(x = 2020.4, y = 300, xend = 2019.5, yend = 350),
+             arrow = arrow(length = unit(0.03, "npc"), type="closed"), 
+             colour = "#0c2a3f", size = 0.5, curvature = -0.3, angle = 90) +
+  labs(title = "California waters are becoming impaired faster than we can delist them", 
+       subtitle = "Cumulative sums of California's 303(d) newly listed and delisted waters, 2010-current",
+       x = "Year",
+       y = "Waterbody/pollutant combinations") +
+  # theme_classic() +
+  theme(plot.background = element_rect(fill = "#dae4eb"), # background colour
+        plot.title = element_text(colour = "#0c2a3f", # text colour
+                                  size = 16, # font size
+                                  face = "bold"), # bold text
+        plot.subtitle = element_text(colour = "#0c2a3f",
+                                     size = 13,
+                                     face = "italic"),
+        plot.caption = element_text(colour = "#0c2a3f"),
+        axis.text = element_text(colour = "#0c2a3f"),
+        axis.title.x = element_text(colour = "#0c2a3f", size = 10, face = "bold"),
+        axis.title.y = element_text(colour = "#0c2a3f", size = 10, face = "bold"),
+        axis.text.x = element_text(colour = "#0c2a3f", size = 10),
+        axis.text.y = element_text(colour = "#0c2a3f", size = 10),
+        axis.ticks.x = element_blank(),
+        axis.ticks.y = element_blank(),
+        plot.margin = unit(c(1,1,1,1), "cm"),
+        panel.background = element_rect(fill = "#dae4eb"),
         panel.grid = element_blank(),
         legend.position = "none")
 
