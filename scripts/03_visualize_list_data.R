@@ -4,6 +4,7 @@
 library(here)
 library(tidyverse)
 library(janitor)
+library(bbplot) ##devtools::install_github('bbc/bbplot')
 
 lists <- read_csv(here("transformeddata", "lists_delists_2010_2022.csv")) %>%
   remove_empty(c("rows", "cols"))
@@ -105,44 +106,51 @@ ggplot(data=table1) +
         legend.position = "none")
 
 ## with different colors and curved arrows
-ggplot(data=table1) +
-  geom_ribbon(data = table2, aes(x = report_year, ymin = delisted, ymax = new_listing), fill  = "#3f7c93") +
-  geom_line(aes(x = report_year, y = cs, group = listing_status), size = 1.5, color = "#0c2a3f") +
+for_factsheet <- ggplot(data=table1) +
+  geom_ribbon(data = table2, aes(x = report_year, ymin = delisted, ymax = new_listing), fill  = "#f4f6fc") +
+  geom_line(aes(x = report_year, y = cs, group = listing_status), size = 1.5, color = "#1c5e92") +
   scale_x_continuous(breaks = seq(2010,2022,2)) +
   scale_y_continuous(breaks = seq(0,4000,1000)) +
-  annotate("label", x = 2021, y = 4200, label = "Listed", fill = "#0c2a3f", color = "#dae4eb") +
-  geom_curve(aes(x = 2020.5, y = 4200, xend = 2020, yend = 3500),
+  annotate("label", x = 2018, y = 3600, label = "Listed", fill = "#f4f6fc", color = "#050a30", size = 2) +
+  geom_curve(aes(x = 2018.5, y = 3600, xend = 2020, yend = 3500),
              arrow = arrow(length = unit(0.03, "npc"), type="closed"), 
-             colour = "#0c2a3f", size = 0.5, curvature = 0.3, angle = 90) +
-  annotate("label", x = 2021, y = 300, label = "Delisted", fill = "#0c2a3f", color = "#dae4eb") +
-  geom_curve(aes(x = 2020.4, y = 300, xend = 2019.5, yend = 350),
+             colour = "#f4f6fc", size = 0.3, curvature = -0.3, angle = 90) +
+  annotate("label", x = 2021, y = 300, label = "Delisted", fill = "#f4f6fc", color = "#050a30", size = 2) +
+  geom_curve(aes(x = 2020.2, y = 300, xend = 2019, yend = 350),
              arrow = arrow(length = unit(0.03, "npc"), type="closed"), 
-             colour = "#0c2a3f", size = 0.5, curvature = -0.3, angle = 90) +
-  labs(title = "California waters are becoming impaired faster than we can delist them", 
-       subtitle = "Cumulative sums of California's 303(d) newly listed and delisted waters, 2010-current",
-       x = "Year",
-       y = "Waterbody/pollutant combinations") +
+             colour = "#f4f6fc", size = 0.3, curvature = -0.3, angle = 90) +
+  labs(#title = "California waters are becoming impaired faster than we can delist them", 
+       # subtitle = "California waters are becoming impaired faster than we can delist them",
+       # caption = "Source: CA Integrated Report, 2010-2022",
+       x = NULL,
+       y = NULL) +
   # theme_classic() +
-  theme(plot.background = element_rect(fill = "#dae4eb"), # background colour
-        plot.title = element_text(colour = "#0c2a3f", # text colour
+  bbc_style() +
+  theme(plot.background = element_rect(fill = "#050a30"), # background colour
+        plot.title = element_text(colour = "#f4f6fc", # text colour
                                   size = 16, # font size
                                   face = "bold"), # bold text
-        plot.subtitle = element_text(colour = "#0c2a3f",
+        plot.subtitle = element_text(colour = "#f4f6fc",
                                      size = 13,
-                                     face = "italic"),
-        plot.caption = element_text(colour = "#0c2a3f"),
-        axis.text = element_text(colour = "#0c2a3f"),
-        axis.title.x = element_text(colour = "#0c2a3f", size = 10, face = "bold"),
-        axis.title.y = element_text(colour = "#0c2a3f", size = 10, face = "bold"),
-        axis.text.x = element_text(colour = "#0c2a3f", size = 10),
-        axis.text.y = element_text(colour = "#0c2a3f", size = 10),
+                                     face = "bold"),
+        plot.caption = element_text(colour = "#f4f6fc",
+                                    size = 9),
+        axis.text = element_text(colour = "#f4f6fc"),
+        # axis.title.x = element_text(colour = "#050a30", size = 10, face = "bold"),
+        # axis.title.y = element_text(colour = "#050a30", size = 10, face = "bold"),
+        axis.text.x = element_text(colour = "#f4f6fc", size = 6, angle = 30),
+        axis.text.y = element_text(colour = "#f4f6fc", size = 6),
         axis.ticks.x = element_blank(),
         axis.ticks.y = element_blank(),
-        plot.margin = unit(c(1,1,1,1), "cm"),
-        panel.background = element_rect(fill = "#dae4eb"),
+        plot.margin = unit(c(2,2,2,4), "mm"),
+        panel.background = element_rect(fill = "#050a30"),
         panel.grid = element_blank(),
         legend.position = "none")
 
+tiff(filename = here("figures", "for_factsheet2.tif"),
+    width = 3.6, height = 2, units = "in", res = 300)
+for_factsheet
+dev.off()
 
 ####
 #### OLD
